@@ -14,8 +14,15 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/signup', function (req, res) {
-  user.signup('','','')
-  console.log(res);
+  var name=req.body.name;
+  var email=req.body.email;
+  var password=req.body.password;
+  if(name && email && password){
+      user.signup(name, email, password)
+  }
+  else{
+    res.send('Failure');
+  }
 });
 
 app.listen(8000, () => console.log('Started listening on port', 8000));
