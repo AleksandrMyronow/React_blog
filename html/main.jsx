@@ -30,7 +30,9 @@ class Signin extends React.Component {
       password: this.state.password
     })
     .then(function (response) {
-      console.log(response);
+      if(response.data == 'success'){
+      window.location.assign('http://localhost:8000/home')
+    }
     })
     .catch(function (error) {
       console.log(error);
@@ -91,7 +93,7 @@ class Signup extends React.Component{
       console.log(error);
     });
   }
-  
+
   render() {
       return (
         <div>
