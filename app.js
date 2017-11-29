@@ -111,4 +111,11 @@ app.post('/updateProfile', function(req, res){
   })
 })
 
+app.post('/addtag', function (req, res) {
+  var tag = req.body.tag;
+  post.addTag(tag,function(result){
+    res.send(result);
+  }); 
+})
+
 app.listen(8000, () => console.log('Started listening on port', 8000));

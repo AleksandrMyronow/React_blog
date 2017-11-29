@@ -85,5 +85,23 @@ module.exports = {
                 }
             });
         })
-    }
+    },
+
+    addTag: function(tagName, callback){
+    MongoClient.connect(url, function(err, db) {
+        db.collection('tag').insertOne( {
+            "name": tagName
+        },function(err, result){
+            assert.equal(err, null);
+            console.log("Saved the tag details.");
+            if(err == null){
+                callback(true)
+            }
+            else{
+                callback(false)
+            }
+        });
+    });
+}
+
 }

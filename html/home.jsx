@@ -282,13 +282,35 @@ class ShowProfile extends React.Component {
 class AddTag extends React.Component {
     constructor(props) {
       super(props);
+      this.addTag = this.addTag.bind(this);
+      this.handleTagChange = this.handleTagChange.bind(this);
+      this.state = {
+        tag:''
+      };
     }
+
+    addTag(){
+ 
+  axios.post('/addtag', {
+      tag: this.state.tag
+    })
+    .then(function (response) {
+      console.log('reponse from add tag is ',response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
      
     componentDidMount(){
       document.getElementById('addHyperLink').className = "";
       document.getElementById('homeHyperlink').className = "";
       document.getElementById('profileHyperlink').className = "";
       document.getElementById('tagHyperlink').className = "active";
+    }
+
+    handleTagChange(e){
+      this.setState({tag:e.target.value})
     }
      
     render() {
@@ -298,10 +320,10 @@ class AddTag extends React.Component {
               <form role="form">
                 <br styles="clear:both" />
                 <div className="form-group">
-                  <input type="text" className="form-control" id="tag" name="tag" placeholder="Tag" required />
+                  <input value={this.state.tag} type="text" onChange={this.handleTagChange} className="form-control" id="tag" name="tag" placeholder="Tag" required />
                 </div>
                 <div className="form-group">
-                  <button type="button" id="submit" name="submit" className="btn btn-primary pull-right">Add Tag</button>
+                  <button type="button" onClick={this.addTag} id="submit" name="submit" className="btn btn-primary pull-right">Add Tag</button>
                 </div>
               </form>
  
