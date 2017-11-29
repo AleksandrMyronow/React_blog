@@ -96,4 +96,19 @@ app.post('/addpost', function (req, res) {
   } 
 })
 
+app.post('/getProfile', function(req,res){
+  user.getUserInfo(sessions.username, function(result){
+    res.send(result)
+  })
+})
+
+app.post('/updateProfile', function(req, res){
+  var name = req.body.name;
+  var password = req.body.password;
+   
+  user.updateProfile(name, password, sessions.username, function(result){
+      res.send(result);
+  })
+})
+
 app.listen(8000, () => console.log('Started listening on port', 8000));

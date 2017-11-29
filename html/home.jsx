@@ -99,17 +99,17 @@ class ShowPost extends React.Component {
   }
 
   componentDidMount(){
-    var self = this;
+    // var self = this;
    
-    axios.post('/getPost', {
+    // axios.post('/getPost', {
       
-    })
-    .then(function (response) {
-       self.setState({posts:response.data})
-    })
-    .catch(function (error) {
-      console.log('error is ',error);
-    });
+    // })
+    // .then(function (response) {
+    //    self.setState({posts:response.data})
+    // })
+    // .catch(function (error) {
+    //   console.log('error is ',error);
+    // });
 
     this.getPost();
 
@@ -196,11 +196,128 @@ class ShowPost extends React.Component {
 
 }
 
+class ShowProfile extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleNameChange = this.handleNameChange.bind(this);
+      this.handlePasswordChange = this.handlePasswordChange.bind(this);
+      this.updateProfile = this.updateProfile.bind(this);
+      this.getProfile = this.getProfile.bind(this);
+      this.state = {
+        name:'',
+        email:'',
+        password:'',
+        id:''
+      };
+       
+    }
+
+    handleNameChange(e){
+      this.setState({name:e.target.value})
+    }
+    handlePasswordChange(e){
+      this.setState({password:e.target.value})
+    }
+
+    componentDidMount(){
+      document.getElementById('addHyperLink').className = "";
+      document.getElementById('homeHyperlink').className = "";
+      document.getElementById('profileHyperlink').className = "active";
+      this.getProfile();
+    }
+
+    updateProfile(){ 
+      var self = this;
+      axios.post('/updateProfile', {
+        name: this.state.name,
+        password: this.state.password
+      })
+      .then(function (response) {
+        if(response){
+          hashHistory.push('/')  
+        }
+      })
+      .catch(function (error) {
+        console.log('error is ',error);
+      });
+    }
+ 
+    getProfile(){
+      var self = this;
+      axios.post('/getProfile', {
+      })
+      .then(function (response) {
+        if(response){
+          self.setState({name:response.data.name});
+          self.setState({email:response.data.email});
+          self.setState({password:response.data.password});  
+        }
+      })
+      .catch(function (error) {
+        console.log('error is ',error);
+      });
+    }
+     
+    render() {
+      return (
+        <div className="col-md-5">
+          <div className="form-area">  
+              <form role="form">
+                <br styles="clear:both" />
+                <div className="form-group">
+                  <input value={this.state.name} type="text" onChange={this.handleNameChange} className="form-control" placeholder="Name" required />
+                </div>
+                <div className="form-group">
+                  <input value={this.state.password} type="password" onChange={this.handlePasswordChange} className="form-control" placeholder="Password" required />
+                </div>
+                
+                <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Update</button>
+              </form>
+          </div>
+        </div>
+      )
+    }
+}
+
+class AddTag extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+     
+    componentDidMount(){
+      document.getElementById('addHyperLink').className = "";
+      document.getElementById('homeHyperlink').className = "";
+      document.getElementById('profileHyperlink').className = "";
+      document.getElementById('tagHyperlink').className = "active";
+    }
+     
+    render() {
+      return (
+        <div className="col-md-5">
+          <div className="form-area">  
+              <form role="form">
+                <br styles="clear:both" />
+                <div className="form-group">
+                  <input type="text" className="form-control" id="tag" name="tag" placeholder="Tag" required />
+                </div>
+                <div className="form-group">
+                  <button type="button" id="submit" name="submit" className="btn btn-primary pull-right">Add Tag</button>
+                </div>
+              </form>
+ 
+          </div>
+        </div>
+      )
+    }
+}
+
 
 ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={ShowPost} path="/"></Route>
         <Route component={AddPost} path="/addPost(/:id)"></Route>
+        <Route component={ShowProfile} path="/showProfile"></Route>
+        <Route component={AddTag} path="/addTag"></Route>
     </Router>,
 document.getElementById('app'));
 
