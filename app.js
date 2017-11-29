@@ -80,17 +80,19 @@ app.post('/deletePost', function(req,res){
 app.post('/addpost', function (req, res) {
   var title = req.body.title;
   var subject = req.body.subject;
+  var tag = req.body.tag;
   var id = req.body.id;
+  console.log('id is ',id);
   if(id == '' || id == undefined) {
     console.log('add');
 
-    post.addPost(title, subject ,function(result){
+    post.addPost(title, subject ,tag, function(result){
       res.send(result);
     }); 
   }
   else{
     console.log('update',title,subject);
-    post.updatePost(id, title, subject ,function(result){
+    post.updatePost(id, title, subject , tag, function(result){
       res.send(result);
     });
   } 
@@ -116,6 +118,12 @@ app.post('/addtag', function (req, res) {
   post.addTag(tag,function(result){
     res.send(result);
   }); 
+})
+
+app.post('/gettag', function (req, res) {
+  post.getTag(function(result){
+    res.send(result);
+  });
 })
 
 app.listen(8000, () => console.log('Started listening on port', 8000));

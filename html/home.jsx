@@ -9,19 +9,26 @@ class AddPost extends React.Component {
   super(props);
   this.handleTitleChange = this.handleTitleChange.bind(this);
   this.handleSubjectChange = this.handleSubjectChange.bind(this);
+  this.getTags = this.getTags.bind(this);
   this.addPost = this.addPost.bind(this);
   this.getPostWithId = this.getPostWithId.bind(this);
+  this.handleTagChange = this.handleTagChange.bind(this);
   this.state = {
     title:'',
     subject:'',
-    id:''
+    id:'',
+    tag:0,
+    tags: []
   };
 }
 
 componentDidMount(){
   document.getElementById('addHyperLink').className = "active";
   document.getElementById('homeHyperlink').className = "";
+  document.getElementById('profileHyperlink').className = "";
+  document.getElementById('tagHyperlink').className = "";
   this.getPostWithId();
+  this.getTags();
 }
 
   
@@ -30,6 +37,7 @@ componentDidMount(){
   axios.post('/addPost', {
     title: this.state.title,
     subject: this.state.subject,
+    tag: this.state.tag,
     id: this.props.params.id
   })
   .then(function (response) {
@@ -50,7 +58,8 @@ getPostWithId(){
   .then(function (response) {
     if(response){
       self.setState({title:response.data.title});
-      self.setState({subject:response.data.subject});  
+      self.setState({subject:response.data.subject});
+      self.setState({tag:response.data.tag})    
     }
   })
   .catch(function (error) {
@@ -58,11 +67,32 @@ getPostWithId(){
   });
 }
 
-handleTitleChange(e){
+getTags(){
+  var self = this;
+   
+  axios.post('/getTag', {
+  })
+  .then(function (response) {
+    if(response){
+      self.setState({tags:response.data}); 
+    }
+     
+  })
+  .catch(function (error) {
+    console.log('error is ',error);
+  });
+ 
+}
+
+  handleTitleChange(e){
     this.setState({title:e.target.value})
   }
   handleSubjectChange(e){
     this.setState({subject:e.target.value})
+  }
+
+  handleTagChange(e){
+  this.setState({tag:e.target.value})
   }
 
 
@@ -78,6 +108,16 @@ handleTitleChange(e){
                 </div>          
                 <div className="form-group">
                   <textarea value={this.state.subject} className="form-control" onChange={this.handleSubjectChange} type="textarea" id="subject" placeholder="Subject" maxlength="140" rows="7"></textarea>
+                </div>
+                <div className="form-group">
+                  <select className="form-control" value={this.state.tag} onChange={this.handleTagChange}>
+                  <option value="0">Select Tag</option>
+                  {
+                    this.state.tags.map(function(tag, i) {
+                      return (<option key={i} value={tag._id}>{tag.name}</option>)       
+                    }.bind(this))
+                  }
+                  </select>
                 </div>
                 <button type="button" onClick={this.addPost} id="submit" name="submit" className="btn btn-primary pull-right">Add Post</button>
               </form>
